@@ -4,14 +4,14 @@ const fp = require('fastify-plugin');
 const fxp = require('fast-xml-parser');
 
 const defaults = {
-    contentType: ["text/xml", "application/xml", "application/rss+xml"],
+    contentType: ["text/xml", "application/xml", "application/rss+xml", "application/atom+xml"],
     validate: false
 }
 
 function xmlBodyParserPlugin(fastify, options, next) {
     const opts = Object.assign({}, defaults, options || {})
 
-    function contentParser(req, payload, done) {
+    function contentParser(_req, payload, done) {
         const xmlParser = new fxp.XMLParser(opts);
         const parsingOpts = opts;
 
@@ -54,7 +54,6 @@ function xmlBodyParserPlugin(fastify, options, next) {
 
     if(typeof opts.contentType === "string"){
       fastify.addContentTypeParser(opts.contentType, contentParser);
-      //console.log(fastify.hasContentTypeParser(opts.contentType));
     }else{
       for(var i=0; i< opts.contentType.length; i++){
         fastify.addContentTypeParser(opts.contentType[i], contentParser);
